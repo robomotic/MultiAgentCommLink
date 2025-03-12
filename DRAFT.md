@@ -365,6 +365,65 @@ The protocol provides a standard interface for LLM capabilities:
 - Predictive pre-fetching for anticipated data needs
 - Differential updates to minimize data transfer
 
+## 4.8 Model Context Protocol (MCP) Integration
+
+The Multi-Agent Communication Protocol incorporates and extends the Model Context Protocol (MCP) developed by Anthropic to enable standardized access to data sources and tools across multiple agent systems.
+
+#### 4.8.1 MCP Compatibility Layer
+
+The protocol provides a dedicated compatibility layer for MCP:
+
+- **Native MCP Support**: Agents can directly connect to MCP-compatible servers without adaptation
+- **MCP Client Capabilities**: Agents can act as MCP clients to access external data sources 
+- **MCP Server Capabilities**: Agents can expose their data through MCP server interfaces
+- **Cross-Protocol Translation**: Automatic conversion between MACP and MCP message formats
+- **Unified Authentication**: MCP authentication tokens are recognized within the MACP security framework
+
+#### 4.8.2 MCP Resource Types
+
+The protocol supports all MCP resource types, including:
+
+- **Message Histories**: Conversations between humans and LLMs
+- **Documents**: Text-based content with optional metadata
+- **Structured Data**: JSON, tables, and other structured formats
+- **Function Definitions**: Tool specifications exposable to LLMs
+- **Function Execution**: Ability to invoke tools across agent boundaries
+- **Vector Search**: Semantic retrieval capabilities across data sources
+
+#### 4.8.3 MCP Protocol Flow Integration
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Agent A   │     │ Translation │     │   Agent B   │
+│  (MCP Client)│◄────┤    Layer    ├────►│(MACP Native)│
+└─────────────┘     └─────────────┘     └─────────────┘
+       │                                        │
+       ▼                                        ▼
+┌─────────────┐                        ┌─────────────┐
+│  External   │                        │  Internal   │
+│ MCP Servers │                        │ MACP System │
+└─────────────┘                        └─────────────┘
+```
+
+#### 4.8.4 Joint Schema Definition
+
+The MACP schema incorporates and extends the MCP schema (defined in the [MCP specification](https://spec.modelcontextprotocol.io/)) to allow:
+
+- **Schema Inheritance**: MACP types can extend MCP base types
+- **Plugin Architecture**: MCP servers can be registered as MACP capabilities
+- **Capability Discovery**: MCP resources are advertised in the MACP capability registry
+- **Cross-Protocol References**: Resources can be referenced across protocol boundaries
+
+#### 4.8.5 Implementation Guidelines
+
+When implementing MACP with MCP support:
+
+- Use the MCP SDKs (TypeScript, Python, Java, Kotlin) as building blocks
+- Wrap MCP client/server implementations with MACP protocol adaptors
+- Leverage MCP's standard data formats for inter-agent communication
+- Extend MCP authorization models with MACP's multi-agent authorization framework
+- Register MCP servers in MACP service discovery mechanisms
+
 ## 5. Security Considerations
 
 Implementation of this protocol requires careful attention to:
@@ -384,6 +443,7 @@ A minimal implementation should include:
 - Core message formats
 - Privacy consent mechanisms
 - Simplified explanation capabilities
+- MCP compatibility for basic data access
 
 ### 6.2 Reference Implementation
 
@@ -392,6 +452,17 @@ A reference implementation should be developed to:
 - Provide a starting point for adopters
 - Demonstrate interoperability
 - Establish best practices
+- Show MCP integration patterns
+
+### 6.3 MCP Integration Pathway
+
+To incorporate MCP support into an existing system:
+
+1. **Phase 1**: Implement MCP client capabilities to access external data sources
+2. **Phase 2**: Expose internal data resources as MCP servers
+3. **Phase 3**: Incorporate full MACP message envelope with MCP payload support
+4. **Phase 4**: Implement cross-protocol authentication and authorization
+5. **Phase 5**: Deploy the complete MACP stack with MCP compatibility
 
 ## 7. Open Questions and Issues
 
@@ -412,7 +483,9 @@ The following questions remain open for discussion:
 
 ## 9. References
 
-[To be added]
+1. Model Context Protocol Specification, Anthropic, https://spec.modelcontextprotocol.io/
+2. Model Context Protocol GitHub Repository, https://github.com/modelcontextprotocol
+3. Anthropic Documentation on MCP, https://docs.anthropic.com/en/docs/agents-and-tools/mcp
 
 ## 10. Appendices
 
